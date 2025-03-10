@@ -1,0 +1,46 @@
+# Checkout a branch interactively (colored log preview)
+alias gco='git checkout $(git branch | fzf --preview "git log --oneline --graph --decorate --color=always -n 10 {}")'
+
+# Delete a local branch interactively (colored log preview)
+alias gbd='git branch -d $(git branch | fzf --preview "git log --oneline --graph --decorate --color=always -n 10 {}")'
+
+# Delete a remote branch interactively (colored log preview)
+alias gbdr='git push origin --delete $(git branch -r | sed "s/origin\///" | fzf --preview "git log --oneline --graph --decorate --color=always -n 10 origin/{}")'
+
+# Show git log interactively (colored commit preview)
+alias glog='git log --oneline --graph --decorate --all | fzf --preview "git show --color=always --stat {+1}"'
+
+# Interactive stash apply (colored stash preview)
+alias gstash='git stash list | fzf --preview "git stash show -p --color=always $(awk \"{print \$1}\")" | awk "{print \$1}" | xargs git stash apply'
+
+# Interactive stash drop (colored stash preview)
+alias gstashdrop='git stash list | fzf --preview "git stash show -p --color=always $(awk \"{print \$1}\")" | awk "{print \$1}" | xargs git stash drop'
+
+# Checkout a commit interactively (colored commit preview)
+alias gcoh='git checkout $(git log --oneline | fzf --preview "git show --color=always --stat {+1}" | awk "{print \$1}")'
+
+# Show diff of a file interactively (colored diff preview)
+alias gdf='git diff $(git ls-files | fzf --preview "git diff --color=always {+1}")'
+
+# Add files interactively (colored file preview)
+function gadd() {
+  local files
+  files=$(git status --porcelain | awk 'substr($0,1,1) == " "' | cut -c4- | fzf \
+    --multi \
+    --preview 'git diff --color=always HEAD -- {}' \
+    --preview-window=right:60%:wrap \
+    --bind 'space:toggle+down,tab:toggle+change-preview:git diff --color=always HEAD -- {}') || return
+  [ -n "$files" ] && echo "$files" | xargs -d '\n' git add
+}
+
+# Reset a file interactively (colored file preview)
+alias grs='git reset HEAD $(git ls-files | fzf --preview "batcat --style=grid --color=always {+1}")'
+
+# Show file history interactively (colored commit log preview)
+alias gfh='git log --pretty=format:"%h %s [%an]" -- $(git ls-files | fzf --preview "git log --oneline --color=always -- {+1}")'
+
+# Interactive rebase (colored commit preview)
+alias grbi='git rebase -i $(git log --oneline | fzf --preview "git show --color=always --stat {+1}" | awk "{print \$1}")'
+
+# Cherry-pick a commit interactively (colored commit preview)
+alias gcp='git cherry-pick $(git log --oneline | fzf --preview "git show --color=always --stat {+1}" | awk "{print \$1}")'

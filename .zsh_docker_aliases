@@ -1,0 +1,38 @@
+# List containers (running and stopped) with interactive selection, previewing inspect output with batcat
+alias dps='docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Image}}" | fzf --multi --preview "docker inspect {1} | batcat --language json --style=plain --color=always"'
+
+# Remove selected containers (multiple selection)
+alias drm='docker rm $(docker ps -a --format "{{.ID}} {{.Names}}" | fzf --multi | awk "{print \$1}")'
+
+# Remove selected images (multiple selection)
+alias drmi='docker rmi $(docker images --format "{{.Repository}}:{{.Tag}} {{.ID}}" | fzf --multi | awk "{print \$2}")'
+
+# Start a selected stopped container
+alias dup='docker start $(docker ps -a --format "{{.ID}} {{.Names}}" | fzf | awk "{print \$1}")'
+
+# Stop a running container
+alias dstop='docker stop $(docker ps --format "{{.ID}} {{.Names}}" | fzf | awk "{print \$1}")'
+
+# Restart a selected container
+alias drestart='docker restart $(docker ps --format "{{.ID}} {{.Names}}" | fzf | awk "{print \$1}")'
+
+# Show logs of a selected container (single selection), previewing with batcat for better readability
+alias dlogs='docker logs -f $(docker ps --format "{{.ID}} {{.Names}}" | fzf | awk "{print \$1}") 2>&1 | batcat --language log --paging always'
+
+# Show history of a selected image (single selection)
+alias dhist='docker history $(docker images --format "{{.Repository}}:{{.Tag}} {{.ID}}" | fzf | awk "{print \$1}") | batcat --paging always'
+
+# Execute a shell in a selected running container (single selection)
+alias dexec='docker exec -it $(docker ps --format "{{.ID}} {{.Names}}" | fzf | awk "{print \$1}") bash'
+
+# Remove all stopped containers (with confirmation)
+alias drm-all='docker rm $(docker ps -aq | fzf --multi)'
+
+# Remove all dangling images
+alias drmi-dangling='docker rmi $(docker images -f "dangling=true" -q | fzf --multi)'
+
+# Prune system interactively
+alias dprune='docker system prune -a -f'
+
+# Show detailed inspect output for selected container with batcat for better JSON readability
+alias dinspect='docker inspect $(docker ps -a --format "{{.ID}} {{.Names}}" | fzf | awk "{print \$1}") | batcat --language json --paging always'

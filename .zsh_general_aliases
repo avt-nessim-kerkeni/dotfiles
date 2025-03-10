@@ -1,0 +1,36 @@
+# Aliases for eza
+unalias ls 2>/dev/null
+function ls() {
+  eza --icons --color=auto -F "$@"
+}
+alias lt="ls --icons --tree --color=auto -F"
+compdef ls=ls
+
+# General aliases
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias cp="cp -iv"
+alias mv="mv -iv"
+alias rm="rm -iv"
+alias df="df -h"
+alias du="du -h"
+alias grep="grep --color=auto"
+alias diff="diff --color=auto"
+
+alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+
+# Fuzzy search for files and preview with batcat
+alias fbat='fzf --preview "batcat --style=plain --color=always {}"'
+
+# Search and edit files with preview
+alias fe='fzf --preview "batcat --style=plain --color=always {}" | xargs nano'
+
+# Search and cat files interactively
+alias fcat='fzf --preview "batcat --style=plain --color=always {}" | xargs cat'
+
+# Find JSON files and preview with batcat
+alias fj='find . -type f -name "*.json" | fzf --preview "batcat --language json --style=plain --color=always {}"'
+
+# Find YAML files and preview with batcat
+alias fy='find . -type f -name "*.yml" -o -name "*.yaml" | fzf --preview "batcat --language yaml --style=plain --color=always {}"'
