@@ -4,3 +4,10 @@
 !.zshrc
 !.config/
 !.config/starship.toml
+!.config/nvim/
+!.config/nvim/lua
+!.config/nvim/init.lua
+!.config/nvim/lua/config/
+!.config/nvim/lua/plugins/
+!.config/nvim/lua/config/*
+!.config/nvim/lua/plugins/*
