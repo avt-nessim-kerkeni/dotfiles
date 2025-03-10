@@ -44,3 +44,4 @@ alias grbi='git rebase -i $(git log --oneline | fzf --preview "git show --color=
 
 # Cherry-pick a commit interactively (colored commit preview)
 alias gcp='git cherry-pick $(git log --oneline | fzf --preview "git show --color=always --stat {+1}" | awk "{print \$1}")'
+#Comment

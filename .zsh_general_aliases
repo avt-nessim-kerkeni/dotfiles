@@ -6,6 +6,10 @@ function ls() {
 alias lt="ls --icons --tree --color=auto -F"
 compdef ls=ls
 
+function z() {
+  zoxide "$@"
+}
+
 # General aliases
 alias ..="cd .."
 alias ...="cd ../.."
