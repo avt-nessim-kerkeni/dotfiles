@@ -16,7 +16,6 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias cp="cp -iv"
 alias mv="mv -iv"
-alias rm="rm -iv"
 alias df="df -h"
 alias du="du -h"
 alias grep="grep --color=auto"
@@ -28,7 +27,7 @@ alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias fbat='fzf --preview "batcat --style=plain --color=always {}"'
 
 # Search and edit files with preview
-alias fe='fzf --preview "batcat --style=plain --color=always {}" | xargs nano'
+alias fe='fzf --preview "batcat --style=plain --color=always {}" | xargs nvim'
 
 # Search and cat files interactively
 alias fcat='fzf --preview "batcat --style=plain --color=always {}" | xargs cat'

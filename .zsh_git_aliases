@@ -25,11 +25,11 @@ alias gdf='git diff $(git ls-files | fzf --preview "git diff --color=always {+1}
 # Add files interactively (colored file preview)
 function gadd() {
   local files
-  files=$(git status --porcelain | awk 'substr($0,1,1) == " "' | cut -c4- | fzf \
-    --multi \
-    --preview 'git diff --color=always HEAD -- {}' \
-    --preview-window=right:60%:wrap \
-    --bind 'space:toggle+down,tab:toggle+change-preview:git diff --color=always HEAD -- {}') || return
+  files=$(git status --porcelain | awk 'substr($0,1,2) == "  " || substr($0,1,2) == "??"' | cut -c4- | fzf \
+  --multi \
+  --preview 'git diff --color=always HEAD -- "{}"' \
+  --preview-window=right:60%:wrap \
+  --bind 'space:toggle+down,tab:toggle+change-preview:git diff --color=always HEAD -- "{}"')
   [ -n "$files" ] && echo "$files" | xargs -d '\n' git add
 }
 

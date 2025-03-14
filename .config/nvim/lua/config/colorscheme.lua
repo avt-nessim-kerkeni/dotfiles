@@ -65,6 +65,19 @@ function M.set_theme(theme_name)
   -- Apply theme
   pcall(theme.setup)
   vim.cmd.colorscheme(theme.name)
+-- Highlight the current line number using the theme's color
+  vim.api.nvim_create_autocmd("ColorScheme", {
+      pattern = "*",
+      callback = function()
+          local ok, catppuccin = pcall(require, "catppuccin.palettes")
+          if ok then
+              local color = catppuccin.get_palette().yellow
+              vim.cmd("hi CursorLineNr guifg=" .. color .. " gui=bold")
+          else
+              vim.cmd("hi CursorLineNr guifg=#ffcc00 gui=bold") -- Default yellow if theme fails
+          end
+      end,
+  })
 end
 
 

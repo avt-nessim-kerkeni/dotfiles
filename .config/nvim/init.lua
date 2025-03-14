@@ -12,4 +12,4 @@ require("lazy").setup(plugins, opts)
 
 -- Load remaining configuration
 require('config.colorscheme').set_theme()
-require('config.keymaps').set_keymaps()
+require('config.keymaps').setup()
