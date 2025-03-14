@@ -14,7 +14,7 @@ return {
         config = function()
             local lsp_zero = require("lsp-zero")
             local lsp_config = require("lspconfig")
-            local get_root_dir = require("config.get_root_dir")
+            local get_root_dir = require("config.get_root_dir").get_root_dir
             -- GET Lsp Config for each language
             local lua_config = require('config.lsp.lua_config')
             local python_config = require('config.lsp.python_config')

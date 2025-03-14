@@ -10,9 +10,11 @@ local function is_git_repo(dir)
 end
 
 -- Function to get the root directory
-function M.get_root_dir()
+function M.get_root_dir(python_env)
   local current_dir = vim.fn.getcwd()
-
+  if python_env then
+    return current_dir
+  end
   -- Check if the current directory or any parent is a git repo
   if is_git_repo(current_dir) then
     return current_dir
