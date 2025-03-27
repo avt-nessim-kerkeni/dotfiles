@@ -6,6 +6,7 @@ return {
     local builtin = require('telescope.builtin')
 
     telescope.setup{
+      
       defaults = {
         -- Additional configurations can be added here
         mappings = {
@@ -25,7 +26,7 @@ return {
     vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = 'List Keymaps' })
 
     -- Keymap to find files by name
-    vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Find Files' })
+    vim.keymap.set('n', '<leader>ff', "<cmd>lua require'telescope.builtin'.find_files({ find_command = {'rg', '--files', '--hidden', '-g', '!.git' }})<cr>")
 
     -- Keymap to search for text within files
     vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Find Text' })

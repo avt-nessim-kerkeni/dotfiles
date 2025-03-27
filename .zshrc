@@ -70,7 +70,7 @@ ZSH_THEME=""
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-vi-mode)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -105,7 +105,7 @@ source $ZSH/oh-my-zsh.sh
 source ~/.zsh_docker_aliases
 source ~/.zsh_git_aliases
 source ~/.zsh_general_aliases
-
+source ~/.zsh_tmux_sessions
 # Path
 export PATH="$HOME/.local/bin:$PATH"
 # Go variables:
@@ -117,10 +117,9 @@ export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
+alias config='/usr/bin/git --git-dir=/home/nk/.dotfiles/ --work-tree=/home/nk'
 export PATH=$PATH:/snap/bin
 # Set up fzf key bindings and fuzzy completion
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
-alias config='/usr/bin/git --git-dir=/home/nk/.dotfiles/ --work-tree=/home/nk'
-alias config='/usr/bin/git --git-dir=/home/nk/.dotfiles/ --work-tree=/home/nk'

@@ -36,3 +36,37 @@ alias dprune='docker system prune -a -f'
 
 # Show detailed inspect output for selected container with batcat for better JSON readability
 alias dinspect='docker inspect $(docker ps -a --format "{{.ID}} {{.Names}}" | fzf | awk "{print \$1}") | batcat --language json --paging always'
+# Use fzf to select a docker compose service and build it
+dcbuild() {
+  local service
+  service=$(grep '^\s\{2,\}[a-zA-Z0-9_-]\+:' docker-compose.yml | tr -d ': ' | fzf --preview 'batcat --style=numbers --color=always --line-range=:100 docker-compose.yml')
+  [ -n "$service" ] && docker compose build "$service"
+}
+
+# Build and force rebuild (no cache)
+dcbuild-nc() {
+  local service
+  service=$(grep '^\s\{2,\}[a-zA-Z0-9_-]\+:' docker-compose.yml | tr -d ': ' | fzf --preview 'batcat --style=numbers --color=always --line-range=:100 docker-compose.yml')
+  [ -n "$service" ] && docker compose build --no-cache "$service"
+}
+
+# Show all Docker networks and inspect one
+dcnet() {
+  local network
+  network=$(docker network ls --format '{{.Name}}' | fzf --preview 'docker network inspect {}')
+  [ -n "$network" ] && docker network inspect "$network"
+}
+
+# Use fzf to select a network and remove it
+dcnetrm() {
+  local network
+  network=$(docker network ls --format '{{.Name}}' | fzf --preview 'docker network inspect {}')
+  [ -n "$network" ] && docker network rm "$network"
+}
+
+# Get the external IP address of a running container
+dcextip() {
+  local container
+  container=$(docker ps --format '{{.ID}} {{.Names}}' | fzf --preview 'docker inspect {}')
+  [ -n "$container" ] && docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(echo "$container" | awk '{print $1}')
+}

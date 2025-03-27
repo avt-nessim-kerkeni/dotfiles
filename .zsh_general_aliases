@@ -20,20 +20,103 @@ alias df="df -h"
 alias du="du -h"
 alias grep="grep --color=auto"
 alias diff="diff --color=auto"
-
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
 # Fuzzy search for files and preview with batcat
 alias fbat='fzf --preview "batcat --style=plain --color=always {}"'
-
 # Search and edit files with preview
 alias fe='fzf --preview "batcat --style=plain --color=always {}" | xargs nvim'
-
 # Search and cat files interactively
 alias fcat='fzf --preview "batcat --style=plain --color=always {}" | xargs cat'
-
 # Find JSON files and preview with batcat
 alias fj='find . -type f -name "*.json" | fzf --preview "batcat --language json --style=plain --color=always {}"'
-
 # Find YAML files and preview with batcat
 alias fy='find . -type f -name "*.yml" -o -name "*.yaml" | fzf --preview "batcat --language yaml --style=plain --color=always {}"'
+
+function ports() {
+  netstat -tulnp | awk 'NR==1 || NR>2 {print}' | fzf --preview 'echo {}' --header='Select a port to inspect'
+}
+
+function psk() {
+  local pid
+  pid=$(ps aux | fzf --header='Select a process to kill' --preview 'echo {}' | awk '{print $2}')
+  
+  if [[ -n "$pid" ]]; then
+    echo "Kill process $pid? (y/N)"
+    read -r ans
+    if [[ "$ans" == "y" ]]; then
+      sudo kill -9 "$pid"
+      echo "Process $pid killed."
+    else
+      echo "Process not killed."
+    fi
+  else
+    echo "No process selected."
+  fi
+}
+
+# FZF Configuration
+export FZF_DEFAULT_COMMAND='find . -type f -not -path "*/\.git/*" 2>/dev/null'
+export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border"
+
+# Advanced FZF completion runner with context-aware previews
+_fzf_comprun() {
+  local command=$1
+  shift
+
+  case "$command" in
+    cd)           fzf --preview 'eza --tree --level=2 --color=always {} 2>/dev/null || tree -C {} | head -200'   "$@" ;;
+    export|unset) fzf --preview "eval 'echo \$'{}"         "$@" ;;
+    ssh)          fzf --preview 'dig {}'                   "$@" ;;
+    *)            fzf --preview 'batcat -n --color=always {} 2>/dev/null || cat -n {}'  "$@" ;;
+  esac
+}
+
+# Ensure FZF uses the custom completion runner
+export FZF_COMPLETION_RUNNER="_fzf_comprun"
+
+# FZF and eza for directory navigation
+fcd() {
+  local dir
+  dir=$(find . -type d -not -path "*/\.git/*" 2>/dev/null | fzf --preview 'eza --tree --level=2 --color=always {} 2>/dev/null || ls -la {}')
+  if [[ -n "$dir" ]]; then
+    cd "$dir" || return
+  fi
+}
+
+# FZF and batcat for file searching and previewing
+ff() {
+  local file
+  file=$(find . -type f -not -path "*/\.git/*" 2>/dev/null | fzf --preview 'batcat --color=always --style=numbers --line-range=:500 {} 2>/dev/null || cat {}')
+  if [[ -n "$file" ]]; then
+    nvim "$file"
+  fi
+}
+
+# FZF for history search
+fh() {
+  print -z $(history -n 1 | awk '!seen[$0]++' | fzf +s --tac)
+}
+
+# FZF for process killing
+fkill() {
+  local pid
+  pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+  if [[ -n "$pid" ]]; then
+    echo "$pid" | xargs kill -${1:-9}
+  fi
+}
+
+# FZF and eza for directory listing and preview
+fls() {
+  (eza --all --long --header --git 2>/dev/null || ls -la) | fzf
+}
+
+# Keybindings for FZF
+bindkey '^F' ff
+bindkey '^E' fcd
+bindkey '^R' fh
+
+# Aliases
+alias fz='fzf'
+alias preview='fzf --preview "batcat --color=always --style=numbers --line-range=:500 {}"'

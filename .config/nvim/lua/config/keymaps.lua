@@ -50,7 +50,7 @@ function M.setup()
   keymap("i", "<C-Backspace>", "<C-w>", opts) -- Ctrl + Backspace : Supprimer le mot précédent
   keymap("i", "<C-d>", "<Del>", opts)         -- Ctrl + d : Supprimer le caractère sous le curseur
   keymap("i", "<C-u>", "<C-o>d0", opts)       -- Ctrl + u : Supprimer jusqu'au début de la ligne
-
+  keymap("i", "<C-o>", "<Esc>o<Esc>i", opts)
   -- Alternative pour quitter le mode insert plus rapidement
   keymap("i", "<C-c>", "<Esc>", opts)
 end
