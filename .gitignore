@@ -12,6 +12,6 @@
 !.config/nvim/lua/plugins/
 !.config/nvim/lua/config/*
 !.config/nvim/lua/config/lsp/*
-!.config/zsh
-!.config/zsh/functions
-!.config/zsh/plugins
+!.config/zsh/*
+!.config/zsh/
+!.config/zsh/functions/*
